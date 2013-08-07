@@ -1,0 +1,7 @@
+require 'spec_helper'
+
+describe MoviesController do
+  describe 'adding director to movie' do
+
+  end
+end

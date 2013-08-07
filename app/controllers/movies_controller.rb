@@ -16,11 +16,11 @@ class MoviesController < ApplicationController
     end
     @all_ratings = Movie.all_ratings
     @selected_ratings = params[:ratings] || session[:ratings] || {}
-    
+
     if @selected_ratings == {}
       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
     end
-    
+
     if params[:sort] != session[:sort]
       session[:sort] = sort
       flash.keep
@@ -48,6 +48,20 @@ class MoviesController < ApplicationController
 
   def edit
     @movie = Movie.find params[:id]
+  end
+
+  def edit_by_title
+    #debugger
+    movies = Movie.where :title => params[:title]
+    if !movies.nil? && movies.length > 0
+      flash[:notice] = nil
+      @movie = movies[0]
+      #redirect_to edit_movie_path :id => @movie.id
+    else
+      flash[:notice] = "There is no movie with the title #{params[:title]}"
+      @movie = nil
+    end
+    render "edit"
   end
 
   def update
