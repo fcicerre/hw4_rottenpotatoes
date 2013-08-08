@@ -6,3 +6,11 @@ Given /^the following movies exist:$/ do |movies_table|
     end
   end
 end
+
+#When /^(?:|I )fill in "Director" with "([^"]*)"$/ do |value|
+#  fill_in('Director', :with => value)
+#end
+
+Then /^the director of "(?:[^"]*)" should be "([^"]*)"$/ do |value|
+    page.should have_content(value)
+end

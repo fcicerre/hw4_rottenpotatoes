@@ -6,6 +6,21 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  def show_by_title
+    #debugger
+    #movies = Movie.where :title => params[:title]
+    @movie = Movie.find_by_title(params[:title])
+    if !@movie.nil?
+      flash[:notice] = nil
+      #@movie = movies[0]
+      #redirect_to edit_movie_path :id => @movie.id
+    else
+      flash[:notice] = "There is no movie with the title #{params[:title]}"
+      #@movie = nil
+    end
+    render "show"
+  end
+
   def index
     sort = params[:sort] || session[:sort]
     case sort
@@ -36,6 +51,17 @@ class MoviesController < ApplicationController
     @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
   end
 
+  def similar_director
+    debugger
+    @movie = Movie.find_by_title(params[:title])
+    if !@movie.director.nil?
+      @movies = Movie.find_all_by_director(@movie.director)
+    else
+      flash[:notice] = "'#{@movie.title}' has no director info"
+      redirect_to movies_path and return
+    end
+  end
+
   def new
     # default: render 'new' template
   end
@@ -52,20 +78,22 @@ class MoviesController < ApplicationController
 
   def edit_by_title
     #debugger
-    movies = Movie.where :title => params[:title]
-    if !movies.nil? && movies.length > 0
+    #movies = Movie.where :title => params[:title]
+    @movie = Movie.find_by_title(params[:title])
+    if !@movie.nil?
       flash[:notice] = nil
-      @movie = movies[0]
+      #@movie = movies[0]
       #redirect_to edit_movie_path :id => @movie.id
     else
       flash[:notice] = "There is no movie with the title #{params[:title]}"
-      @movie = nil
+      #@movie = nil
     end
     render "edit"
   end
 
   def update
     @movie = Movie.find params[:id]
+    params[:movie][:director] = nil if params[:movie][:director] == ''
     @movie.update_attributes!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully updated."
     redirect_to movie_path(@movie)

@@ -14,9 +14,15 @@ module NavigationHelpers
     case page_name
 
     when /^the home\s?page$/
-      '/'
+      '/movies'
     when /^the edit page for "([^"]*)"$/
-      "/movies/#{$1}/edit_by_title"
+      "/movies/edit_by_title?#{URI.encode_www_form(:title => $1)}"
+    when /^the details page for "([^"]*)"$/
+      "/movies/show_by_title?#{URI.encode_www_form(:title => $1)}"
+    when /^the Similar Movies page for "([^"]*)"$/ then
+    begin
+      "/movies/similar_director?#{URI.encode_www_form(:title => $1)}"
+    end
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
