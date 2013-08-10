@@ -16,12 +16,12 @@ module NavigationHelpers
     when /^the home\s?page$/
       '/movies'
     when /^the edit page for "([^"]*)"$/
-      "/movies/edit_by_title?#{URI.encode_www_form(:title => $1)}"
+      "/movies/#{URI.encode_www_form_component($1)}/edit_by_title"
     when /^the details page for "([^"]*)"$/
-      "/movies/show_by_title?#{URI.encode_www_form(:title => $1)}"
+      "/movies/#{URI.encode_www_form_component($1)}/show_by_title"
     when /^the Similar Movies page for "([^"]*)"$/ then
     begin
-      "/movies/similar_director?#{URI.encode_www_form(:title => $1)}"
+      "/movies/#{URI.encode_www_form_component($1)}/similar_director"
     end
 
     # Add more mappings here.

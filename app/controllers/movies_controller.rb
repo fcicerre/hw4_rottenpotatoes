@@ -7,16 +7,11 @@ class MoviesController < ApplicationController
   end
 
   def show_by_title
-    #debugger
-    #movies = Movie.where :title => params[:title]
-    @movie = Movie.find_by_title(params[:title])
+    @movie = Movie.find_by_title(URI.decode_www_form_component(params[:title]))
     if !@movie.nil?
       flash[:notice] = nil
-      #@movie = movies[0]
-      #redirect_to edit_movie_path :id => @movie.id
     else
       flash[:notice] = "There is no movie with the title #{params[:title]}"
-      #@movie = nil
     end
     render "show"
   end
@@ -53,13 +48,19 @@ class MoviesController < ApplicationController
 
   def similar_director
     debugger
-    @movie = Movie.find_by_title(params[:title])
-    if !@movie.director.nil?
-      @movies = Movie.find_all_by_director(@movie.director)
-    else
+    @movie = Movie.find_by_title(URI.decode_www_form_component(params[:title]))
+    if @movie.nil?
+      flash[:notice] = "There is no '#{params[:title]}' movie"
+      redirect_to movies_path and return
+    end
+    debugger
+    if @movie.director.nil? || @movie.director == ""
       flash[:notice] = "'#{@movie.title}' has no director info"
       redirect_to movies_path and return
     end
+    debugger
+    flash[:notice] = nil
+    @movies = Movie.find_all_by_director(@movie.director)
   end
 
   def new
@@ -77,16 +78,11 @@ class MoviesController < ApplicationController
   end
 
   def edit_by_title
-    #debugger
-    #movies = Movie.where :title => params[:title]
-    @movie = Movie.find_by_title(params[:title])
+    @movie = Movie.find_by_title(URI.decode_www_form_component(params[:title]))
     if !@movie.nil?
       flash[:notice] = nil
-      #@movie = movies[0]
-      #redirect_to edit_movie_path :id => @movie.id
     else
       flash[:notice] = "There is no movie with the title #{params[:title]}"
-      #@movie = nil
     end
     render "edit"
   end

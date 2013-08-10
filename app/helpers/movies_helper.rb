@@ -5,6 +5,7 @@ module MoviesHelper
   end
 
   def self.movies_by_director_path(movie)
-    return "/movies/similar_director?#{URI.encode_www_form(:title => movie.title)}"
+    #return "/movies/#{movie.title}/similar_direct"
+    return "/movies/#{URI.encode_www_form_component(movie.title)}/similar_director"
   end
 end
